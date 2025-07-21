@@ -2,11 +2,9 @@ package main
 
 import (
 	"fmt"
-
-	"github.com/pojgik/pokedexcli/internal/pokeapi"
 )
 
-func commandHelp(config *config, param string, caught map[string]pokeapi.Pokemon) error {
+func commandHelp(config *config, param string) error {
 	fmt.Println("Welcome to the Pokedex!")
 	fmt.Println("Usage:")
 	fmt.Println()

@@ -6,7 +6,7 @@ import (
 	"github.com/pojgik/pokedexcli/internal/pokeapi"
 )
 
-func commandExplore(config *config, param string, caught map[string]pokeapi.Pokemon) error {
+func commandExplore(config *config, param string) error {
 	url := "https://pokeapi.co/api/v2/location-area/" + param
 	locationDetails, err := pokeapi.Explore(url, &config.cache)
 	if err != nil {

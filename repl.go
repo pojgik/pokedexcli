@@ -15,11 +15,13 @@ type config struct {
 	Next     *string
 	Previous *string
 	cache    pokecache.Cache
+	caught   map[string]pokeapi.Pokemon
 }
 
 func startRepl() {
 	config := &config{}
 	config.cache = *pokecache.NewCache(5 * time.Second)
+	config.caught = make(map[string]pokeapi.Pokemon)
 	scanner := bufio.NewScanner(os.Stdin)
 	for {
 		fmt.Print("Pokedex > ")
@@ -37,11 +39,9 @@ func startRepl() {
 			param = userInput[1]
 		} // if
 
-		caught := make(map[string]pokeapi.Pokemon)
-
 		command, exists := getCommands()[commandName]
 		if exists {
-			err := command.callback(config, param, caught)
+			err := command.callback(config, param)
 			if err != nil {
 				fmt.Println(err)
 			} // if
@@ -61,7 +61,7 @@ func cleanInput(text string) []string {
 type cliCommand struct {
 	name        string
 	description string
-	callback    func(*config, string, map[string]pokeapi.Pokemon) error
+	callback    func(*config, string) error
 } // cliCommand
 
 func getCommands() map[string]cliCommand {
@@ -90,6 +90,11 @@ func getCommands() map[string]cliCommand {
 			name:        "catch",
 			description: "Attempt to catch the specified Pokemon",
 			callback:    commandCatch,
+		},
+		"inspect": {
+			name:        "inspect",
+			description: "Check information about a caught Pokemon",
+			callback:    commandInspect,
 		},
 		"exit": {
 			name:        "exit",

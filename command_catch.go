@@ -7,7 +7,7 @@ import (
 	"github.com/pojgik/pokedexcli/internal/pokeapi"
 )
 
-func commandCatch(config *config, param string, caught map[string]pokeapi.Pokemon) error {
+func commandCatch(config *config, param string) error {
 	url := "https://pokeapi.co/api/v2/pokemon/" + param
 	pokemon, err := pokeapi.Catch(url, &config.cache)
 	if err != nil {
@@ -18,10 +18,10 @@ func commandCatch(config *config, param string, caught map[string]pokeapi.Pokemo
 	catch_attempt := rand.Float64()
 	if catch_attempt <= catch_rate {
 		fmt.Printf("%s was caught!\n", param)
-		caught[param] = pokemon
+		config.caught[param] = pokemon
 	} else {
 		fmt.Printf("%s escaped!\n", param)
-	}
+	} // if
 
 	return nil
 }
