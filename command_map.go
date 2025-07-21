@@ -8,7 +8,7 @@ import (
 )
 
 func commandMap(config *config) error {
-	locationsList, err := pokeapi.ListLocations(config.Next)
+	locationsList, err := pokeapi.ListLocations(config.Next, &config.locationsCache)
 	if err != nil {
 		return err
 	} // if
@@ -26,7 +26,7 @@ func commandMapb(config *config) error {
 	if config.Previous == nil {
 		return errors.New("you're on the first page")
 	} // if
-	locationsList, err := pokeapi.ListLocations(config.Previous)
+	locationsList, err := pokeapi.ListLocations(config.Previous, &config.locationsCache)
 	if err != nil {
 		return err
 	} // if
