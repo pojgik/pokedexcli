@@ -11,14 +11,14 @@ import (
 )
 
 type config struct {
-	Next           *string
-	Previous       *string
-	locationsCache pokecache.Cache
+	Next     *string
+	Previous *string
+	cache    pokecache.Cache
 }
 
 func startRepl() {
 	config := &config{}
-	config.locationsCache = *pokecache.NewCache(5 * time.Second)
+	config.cache = *pokecache.NewCache(5 * time.Second)
 	scanner := bufio.NewScanner(os.Stdin)
 	for {
 		fmt.Print("Pokedex > ")
@@ -31,10 +31,14 @@ func startRepl() {
 		} // if
 		userInput := cleanInput(scanner.Text())
 		commandName := userInput[0]
+		var param string
+		if len(userInput) > 1 {
+			param = userInput[1]
+		}
 
 		command, exists := getCommands()[commandName]
 		if exists {
-			err := command.callback(config)
+			err := command.callback(config, param)
 			if err != nil {
 				fmt.Println(err)
 			} // if
@@ -54,7 +58,7 @@ func cleanInput(text string) []string {
 type cliCommand struct {
 	name        string
 	description string
-	callback    func(*config) error
+	callback    func(*config, string) error
 } // cliCommand
 
 func getCommands() map[string]cliCommand {
@@ -73,6 +77,11 @@ func getCommands() map[string]cliCommand {
 			name:        "mapb",
 			description: "Get the previous page of locations",
 			callback:    commandMapb,
+		},
+		"explore": {
+			name:        "explore",
+			description: "Explore an area, listing all of the potential encounters there",
+			callback:    commandExplore,
 		},
 		"exit": {
 			name:        "exit",

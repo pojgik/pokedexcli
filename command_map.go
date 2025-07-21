@@ -7,8 +7,8 @@ import (
 	"github.com/pojgik/pokedexcli/internal/pokeapi"
 )
 
-func commandMap(config *config) error {
-	locationsList, err := pokeapi.ListLocations(config.Next, &config.locationsCache)
+func commandMap(config *config, param string) error {
+	locationsList, err := pokeapi.ListLocations(config.Next, &config.cache)
 	if err != nil {
 		return err
 	} // if
@@ -22,11 +22,11 @@ func commandMap(config *config) error {
 	return nil
 } // commandMap
 
-func commandMapb(config *config) error {
+func commandMapb(config *config, param string) error {
 	if config.Previous == nil {
 		return errors.New("you're on the first page")
 	} // if
-	locationsList, err := pokeapi.ListLocations(config.Previous, &config.locationsCache)
+	locationsList, err := pokeapi.ListLocations(config.Previous, &config.cache)
 	if err != nil {
 		return err
 	} // if

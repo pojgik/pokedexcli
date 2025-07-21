@@ -35,7 +35,7 @@ func ListLocations(pageURL *string, locationsCache *pokecache.Cache) (locationLi
 		data = body
 	} else {
 		fmt.Println("Accessing data from cache")
-	}
+	} // if
 
 	locationsList := locationList{}
 	err := json.Unmarshal(data, &locationsList)
