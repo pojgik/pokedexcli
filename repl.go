@@ -7,6 +7,7 @@ import (
 	"strings"
 	"time"
 
+	"github.com/pojgik/pokedexcli/internal/pokeapi"
 	"github.com/pojgik/pokedexcli/internal/pokecache"
 )
 
@@ -34,11 +35,13 @@ func startRepl() {
 		var param string
 		if len(userInput) > 1 {
 			param = userInput[1]
-		}
+		} // if
+
+		caught := make(map[string]pokeapi.Pokemon)
 
 		command, exists := getCommands()[commandName]
 		if exists {
-			err := command.callback(config, param)
+			err := command.callback(config, param, caught)
 			if err != nil {
 				fmt.Println(err)
 			} // if
@@ -58,7 +61,7 @@ func cleanInput(text string) []string {
 type cliCommand struct {
 	name        string
 	description string
-	callback    func(*config, string) error
+	callback    func(*config, string, map[string]pokeapi.Pokemon) error
 } // cliCommand
 
 func getCommands() map[string]cliCommand {
@@ -82,6 +85,11 @@ func getCommands() map[string]cliCommand {
 			name:        "explore",
 			description: "Explore an area, listing all of the potential encounters there",
 			callback:    commandExplore,
+		},
+		"catch": {
+			name:        "catch",
+			description: "Attempt to catch the specified Pokemon",
+			callback:    commandCatch,
 		},
 		"exit": {
 			name:        "exit",

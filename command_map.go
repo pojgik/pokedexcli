@@ -7,7 +7,7 @@ import (
 	"github.com/pojgik/pokedexcli/internal/pokeapi"
 )
 
-func commandMap(config *config, param string) error {
+func commandMap(config *config, param string, caught map[string]pokeapi.Pokemon) error {
 	locationsList, err := pokeapi.ListLocations(config.Next, &config.cache)
 	if err != nil {
 		return err
@@ -22,7 +22,7 @@ func commandMap(config *config, param string) error {
 	return nil
 } // commandMap
 
-func commandMapb(config *config, param string) error {
+func commandMapb(config *config, param string, caught map[string]pokeapi.Pokemon) error {
 	if config.Previous == nil {
 		return errors.New("you're on the first page")
 	} // if
